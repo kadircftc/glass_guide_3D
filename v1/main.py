@@ -16,7 +16,6 @@ from offset_surface import offset_surface
 from read_dat_file import read_dat_file
 from surf_2_3D_object import surf_2_3D_object
 
-# FreeCAD yolunu burada tanımlayın - kendi sisteminize göre değiştirin
 FREECAD_PATH = r"C:\Program Files\FreeCAD 1.0\bin"
 
 
@@ -24,7 +23,6 @@ def save_to_freecad(obj_3d, filename, freecad_path=None):
     """3D modeli FreeCAD formatında kaydet"""
     try:
         if freecad_path is None:
-            # Varsayılan FreeCAD yolu - global değişkenden al
             freecad_path = FREECAD_PATH
             
         if freecad_path not in sys.path:
@@ -40,22 +38,18 @@ def save_to_freecad(obj_3d, filename, freecad_path=None):
         
         print(f"FreeCAD formatında kaydediliyor: {filename}")
         
-        # Çıktı dizinini kontrol et ve oluştur
         output_dir = os.path.dirname(filename)
         if not os.path.exists(output_dir) and output_dir:
             os.makedirs(output_dir)
         
-        # FreeCAD belgesi oluştur
         doc = FreeCAD.newDocument("Model")
         
-        # Nokta ve yüz verilerini hazırla
         points = []
         for i in range(len(obj_3d['x'])):
             points.append(FreeCAD.Vector(obj_3d['x'][i], obj_3d['y'][i], obj_3d['z'][i]))
         
         faces = obj_3d['shp'].simplices
         
-        # Mesh oluştur
         mesh_faces = []
         for face in faces:
             mesh_faces.append([points[face[0]], points[face[1]], points[face[2]]])
@@ -64,13 +58,10 @@ def save_to_freecad(obj_3d, filename, freecad_path=None):
         mesh_feature = doc.addObject("Mesh::Feature", "ModelMesh")
         mesh_feature.Mesh = mesh_obj
         
-        # Mesh'i solide dönüştürmeyi dene
         try:
-            # Mesh'ten şekil oluştur
             shape = Part.Shape()
             shape.makeShapeFromMesh(mesh_obj.Topology, 0.01)
             
-            # Kapalı şekilden solid oluştur
             if shape.isClosed():
                 solid = Part.makeSolid(shape)
                 solid_obj = doc.addObject("Part::Feature", "ModelSolid")
@@ -79,11 +70,9 @@ def save_to_freecad(obj_3d, filename, freecad_path=None):
         except Exception as e:
             print(f"  Solid dönüştürme hatası: {e}")
         
-        # Belgeyi yeniden hesapla ve kaydet
         doc.recompute()
         doc.saveCopy(filename)
         
-        # STEP formatında da kaydet
         try:
             step_file = os.path.splitext(filename)[0] + ".stp"
             Part.export(doc.Objects, step_file)
@@ -293,7 +282,6 @@ def main():
     create_3D_glass(GLASS_3D)
     create_3D_glass_guide(GLASS_GUIDE_3D)
     
-    # FreeCAD dosyalarını kaydet
     try:
         print("\n=== Saving to FreeCAD format ===")
         output_dir = 'output/freecad'

@@ -31,7 +31,7 @@ def create_3D_partial_solid_figures(glass_3d, glass_guide_offset_2_3d,
     ax.set_zlabel('Z')
     ax.set_title('3D Solid görünüm (Parçalı Glass Guide)')
     fig.savefig('output/3D_partial_solid_figures.png')
-    plt.show()
+    #plt.show()
 
 if __name__ == "__main__":
     # Test the function

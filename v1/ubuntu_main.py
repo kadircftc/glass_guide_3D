@@ -9,8 +9,7 @@ from create_3D_glass import create_3D_glass
 from create_3D_glass_guide import create_3D_glass_guide
 from create_3D_partial_solid_figures import create_3D_partial_solid_figures
 from cut_glass_guide import cut_glass_guide
-from find_normal_surface import (find_normal_surface,
-                                 find_normal_surface_optimized)
+from find_normal_surface_ubuntu import find_normal_surface
 from fit_polynom import fit_polynom
 from offset_surface import offset_surface
 from read_dat_file import read_dat_file
@@ -145,7 +144,7 @@ def main():
 
     # Find normal surface
     print("\n=== Finding normal surface ===")
-    normal_sf_point = find_normal_surface_optimized(SURF_glass['sf'][0], GLASS_TRIMLINE_POINTS, dist_1, dist_2, 15, False)
+    normal_sf_point = find_normal_surface(SURF_glass['sf'][0], GLASS_TRIMLINE_POINTS, dist_1, dist_2, 100, False)
     print(f"normal_sf_point size: {len(normal_sf_point['x'])} points")
     
     SURF_normal2glass = fit_polynom(normal_sf_point, alpha, False)
@@ -176,13 +175,13 @@ def main():
     
     # Middle channels with optimized function
     print("\n=== Creating Middle channels ===")
-    ara_dist1_sf_point = find_normal_surface_optimized(SURF_normal2glass['sf'][0], trimline_dist1, dist_3, 0, 15, False)
+    ara_dist1_sf_point = find_normal_surface(SURF_normal2glass['sf'][0], trimline_dist1, dist_3, 0, 100, False)
     print(f"ara_dist1_sf_point size: {len(ara_dist1_sf_point['x'])} points")
     
     SURF_ara_dist1 = fit_polynom(ara_dist1_sf_point, alpha)
     print(f"SURF_ara_dist1 points size: {len(SURF_ara_dist1['points']['x'])} points")
 
-    ara_dist2_sf_point = find_normal_surface_optimized(SURF_normal2glass['sf'][0], trimline_dist2, dist_3, 0, 15, False)
+    ara_dist2_sf_point = find_normal_surface(SURF_normal2glass['sf'][0], trimline_dist2, dist_3, 0, 100, False)
     print(f"ara_dist2_sf_point size: {len(ara_dist2_sf_point['x'])} points")
     
     SURF_ara_dist2 = fit_polynom(ara_dist2_sf_point, alpha)
@@ -190,7 +189,7 @@ def main():
     
     # Cut top and bottom glass guide with optimized function
     print("\n=== Cutting top and bottom glass guide ===")
-    cut_sf_point = find_normal_surface_optimized(SURF_glass['sf'][0], GLASS_TRIMLINE_POINTS, 1.5*dist_1, 1.5*dist_2, 15, False)
+    cut_sf_point = find_normal_surface(SURF_glass['sf'][0], GLASS_TRIMLINE_POINTS, 1.5*dist_1, 1.5*dist_2, 100, False)
     print(f"cut_sf_point size: {len(cut_sf_point['x'])} points")
     
     SURF_cut = fit_polynom(cut_sf_point, alpha)

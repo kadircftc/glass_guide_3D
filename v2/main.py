@@ -14,7 +14,6 @@ from find_normal_surface import (find_normal_surface,
 from fit_polynom import fit_polynom
 from offset_surface import offset_surface
 from read_dat_file import read_dat_file
-from save_points_to_freecad import save_points_to_freecad
 from surf_2_3D_object import surf_2_3D_object
 
 # FreeCAD yolunu burada tanımlayın - kendi sisteminize göre değiştirin
@@ -226,10 +225,8 @@ def main():
     SURF_offset_dist2_updated = fit_polynom(offset_dist2_updated_points, alpha)
     print(f"SURF_offset_dist2_updated points size: {len(SURF_offset_dist2_updated['points']['x'])} points")
 
-
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
-    ax.set_title('3D Solid görünüm (Parçalı Glass Guide)')
     ax.scatter(SURF_offset_dist1_updated['points']['x'], SURF_offset_dist1_updated['points']['y'], SURF_offset_dist1_updated['points']['z'], c='r', marker='.')
     ax.scatter(SURF_offset_dist2_updated['points']['x'], SURF_offset_dist2_updated['points']['y'], SURF_offset_dist2_updated['points']['z'], c='b', marker='.')
     #ax.scatter(normal_sf_point['x'], normal_sf_point['y'], normal_sf_point['z'], c='b', marker='.')
@@ -246,7 +243,6 @@ def main():
     GLASS_3D = surf_2_3D_object(SURF_glass, delta_glass, alpha, False)
     print(f"GLASS_3D size: {len(GLASS_3D['x'])} points")
     
-    
     GLASS_GUIDE_OFFSET_2_3D = surf_2_3D_object(SURF_offset_dist2_updated, delta_guide, alpha, False)
     print(f"GLASS_GUIDE_OFFSET_2_3D size: {len(GLASS_GUIDE_OFFSET_2_3D['x'])} points")
     
@@ -261,15 +257,7 @@ def main():
     
     GLASS_GUIDE_NORMAL_3D = surf_2_3D_object(SURF_offset_normal2glass, delta_guide, alpha, False)
     print(f"GLASS_GUIDE_NORMAL_3D size: {len(GLASS_GUIDE_NORMAL_3D['x'])} points")
-    parts = {
-    "Glass": GLASS_3D,
-    "Offset1": GLASS_GUIDE_OFFSET_1_3D,
-    "Ara1": GLASS_GUIDE_ARA_1_3D,
-    "Normal": GLASS_GUIDE_NORMAL_3D,
-    "Ara2": GLASS_GUIDE_ARA_2_3D,
-    "Offset2": GLASS_GUIDE_OFFSET_2_3D
-    }
-    save_points_to_freecad(parts, "output/freecad/Parcalar.FCStd",isPart=True)
+
     # Create partial solid figures
     print("\n=== Creating partial solid figures ===")
     create_3D_partial_solid_figures(GLASS_3D, GLASS_GUIDE_OFFSET_2_3D,
@@ -282,16 +270,7 @@ def main():
                                   GLASS_GUIDE_OFFSET_1_3D, GLASS_GUIDE_ARA_2_3D,
                                   GLASS_GUIDE_ARA_1_3D, GLASS_GUIDE_NORMAL_3D, 1, False)
     print(f"GLASS_GUIDE_3D size: {len(GLASS_GUIDE_3D['x'])} points")
-    parts = {
-    "Guide": GLASS_GUIDE_3D,
-    }
-    save_points_to_freecad(parts, "output/freecad/Guide.FCStd",isPart=True)
-    fig = plt.figure()
-    ax = fig.add_subplot(111, projection='3d')
-    ax.scatter(GLASS_3D['x'], GLASS_3D['y'], GLASS_3D['z'], c='y', marker='.')
-    ax.set_title('Cam ve Kılavuz Modeli Görselleştirmesi')
-    ax.scatter(GLASS_GUIDE_3D['x'], GLASS_GUIDE_3D['y'], GLASS_GUIDE_3D['z'], c='y', marker='.')
-    #plt.show()
+
     # Create full solid figures
     print("\n=== Creating full solid figures ===")
     create_3D_full_solid_figures(GLASS_3D, GLASS_GUIDE_3D)

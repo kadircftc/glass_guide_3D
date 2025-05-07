@@ -56,7 +56,7 @@ def combine_guide(glass_guide_offset_2_3d, glass_guide_offset_1_3d,
         ax2.set_xlabel('X')
         ax2.set_ylabel('Y')
         ax2.set_zlabel('Z')
-        ax2.set_title('3D Glass: solid görünüm')
+        ax2.set_title('3D Glass: solid view')
         fig2.savefig('output/3D_glass_guide_solid.png')
         #plt.show()
     

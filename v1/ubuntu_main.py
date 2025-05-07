@@ -17,7 +17,7 @@ from save_points_to_freecad import save_points_to_freecad
 from surf_2_3D_object import surf_2_3D_object
 
 # FreeCAD yolunu burada tanımlayın - kendi sisteminize göre değiştirin
-FREECAD_PATH = r"C:\Program Files\FreeCAD 1.0\bin"
+FREECAD_PATH='/freecad/squashfs-root/usr/lib'
 
 def reduce_points(points, factor=2):
     """Reduce the number of points by sampling every nth point"""

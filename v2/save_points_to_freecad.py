@@ -55,24 +55,22 @@ def save_points_to_freecad(parts_dict, filename, isPart=False):
             mesh_obj = doc.addObject("Mesh::Feature", f"{part_name}_mesh")
             mesh_obj.Mesh = mesh
             
-            # Mesh'i yüzeye dönüştür
+            # Mesh'i yüzeye dönüştür (daha yüksek hassasiyet)
             shape = Part.Shape()
-            shape.makeShapeFromMesh(mesh.Topology, 0.1)
+            shape.makeShapeFromMesh(mesh.Topology, 0.005)  # Hassasiyeti artırdık
             
             # Yüzeyi oluştur
             surface = doc.addObject("Part::Feature", part_name)
             surface.Shape = shape
             
-            # Görünüm özelliklerini ayarla
+            # Yüzeyi yumuşat
             try:
-                if FreeCADGui.ActiveDocument:
-                    gui_obj = FreeCADGui.ActiveDocument.getObject(surface.Name)
-                    if gui_obj:
-                        gui_obj.ShapeColor = (0.0, 0.0, 0.8)  # Mavi renk
-                        gui_obj.Transparency = 20  # Yarı saydam
-                        gui_obj.LineWidth = 2  # Çizgi kalınlığı
+                # Yüzeyi yumuşatma işlemi
+                surface.Shape = surface.Shape.removeSplitter()
+                # Yüzeyi birleştir
+                surface.Shape = surface.Shape.fuse(surface.Shape)
             except Exception as e:
-                print(f"Görünüm özellikleri ayarlanamadı: {e}")
+                print(f"Yüzey yumuşatma hatası: {e}")
             
     else:
         doc = FreeCAD.newDocument("Tum")
@@ -100,15 +98,22 @@ def save_points_to_freecad(parts_dict, filename, isPart=False):
             mesh_obj = doc.addObject("Mesh::Feature", f"{part_name}_mesh")
             mesh_obj.Mesh = mesh
             
-            # Mesh'i yüzeye dönüştür
+            # Mesh'i yüzeye dönüştür (daha yüksek hassasiyet)
             shape = Part.Shape()
-            shape.makeShapeFromMesh(mesh.Topology, 0.1)
+            shape.makeShapeFromMesh(mesh.Topology, 0.01)  # Hassasiyeti artırdık
             
             # Yüzeyi oluştur
             surface = doc.addObject("Part::Feature", part_name)
             surface.Shape = shape
             
-            
+            # Yüzeyi yumuşat
+            try:
+                # Yüzeyi yumuşatma işlemi
+                surface.Shape = surface.Shape.removeSplitter()
+                # Yüzeyi birleştir
+                surface.Shape = surface.Shape.fuse(surface.Shape)
+            except Exception as e:
+                print(f"Yüzey yumuşatma hatası: {e}")
 
     doc.recompute()
     doc.saveAs(filename)
